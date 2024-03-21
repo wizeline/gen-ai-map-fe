@@ -23,7 +23,6 @@ export default function Index() {
     <div className="min-h-screen flex flex-col justify-between">
       <HeaderMinimalist />
       {jsonData && <SunburstChart data={jsonData} />}
-      <div id="chart-map" className="mb-6"></div>
     </div>
   );
 }

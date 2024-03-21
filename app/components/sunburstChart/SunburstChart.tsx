@@ -1,6 +1,6 @@
-import Sunburst from 'sunburst-chart';
-import * as d3 from 'd3';
 import { useEffect } from 'react';
+import * as d3 from 'd3';
+import Sunburst from 'sunburst-chart';
 
 export type SunburstLeaf = {
   name: string;
@@ -25,11 +25,16 @@ const SunburstChart = (props: SunburstElementProps) => {
   
   useEffect(() => {
     if (data) {
+      console.log('dattaaa');
       Sunburst()
         .data(data)
-        .color("color")(document.getElementById("chart-map")!);
+        .label('name')
+        .labelOrientation('angular')
+        .maxLevels(10)
+        .color((d, parent) => color(parent ? parent.data.name : null))
+        .tooltipContent((d, node) => `Size: <i>${node.value}</i>`)(document.getElementById("chart-map")!);
     }
-  }, [data]);
+  }, []);
 
   return (
     <div id="chart-map" className="mb-6"></div>
