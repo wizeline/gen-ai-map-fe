@@ -1,6 +1,6 @@
 {
   "name": "wizeline-gen-ai-map-fe",
-  "homepage": "https://wizeline.github.io/gen-ai-map-fe",
+  "homepage": "https://wizeline.github.io/gen-ai-map-fe/",
   "private": true,
   "sideEffects": false,
   "type": "module",
