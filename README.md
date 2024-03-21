@@ -45,10 +45,3 @@ For a simple example, you could use [sirv-cli](https://www.npmjs.com/package/sir
 ```shellscript
 npx sirv-cli build/client/ --single
 ```
-
-## Deploy to GitHub Pages:**
-   - Deploy the build to GitHub Pages by running:
-     ```bash
-     npm run deploy
-     ```
-   - This will push the contents of the `build` folder to the `gh-pages` branch of your repository.
