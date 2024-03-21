@@ -31,6 +31,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Clean install dependencies
+        run: |
+          rm -rf node_modules package-lock.json
       - name: Install & Build
         run: |
           npm ci
