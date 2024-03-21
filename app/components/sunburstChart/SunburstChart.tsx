@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+/* eslint-disable no-unexpected-multiline */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
-import Sunburst from 'sunburst-chart';
 
 export type SunburstLeaf = {
   name: string;
@@ -22,22 +23,32 @@ interface SunburstElementProps {
 const SunburstChart = (props: SunburstElementProps) => {
   const { data } = props;
   const color = d3.scaleOrdinal(d3.schemeSet1);
-  
+  const chartRef = useRef<HTMLDivElement | null>(null);
+  const [Sunburst, setSunburst] = useState<any | null>(null);
+
   useEffect(() => {
-    if (data) {
-      console.log('dattaaa');
-      Sunburst()
-        .data(data)
-        .label('name')
-        .labelOrientation('angular')
-        .maxLevels(10)
-        .color((d, parent) => color(parent ? parent.data.name : null))
-        .tooltipContent((d, node) => `Size: <i>${node.value}</i>`)(document.getElementById("chart-map")!);
+    if (typeof window !== 'undefined') {
+      import('sunburst-chart').then((module) => {
+        setSunburst(module.default);
+      });
     }
   }, []);
 
+  useEffect(() => {
+    if (data && Sunburst) {
+      const chart = Sunburst();
+      chart.data(data)
+        .label('name')
+        .labelOrientation('angular')
+        .maxLevels(10)
+        .color((d: any, parent: any) => color(parent ? parent.data.name : null))
+        .tooltipContent((d: any, node: any) => `Size: <i>${node.value}</i>`)
+        (chartRef.current);
+    }
+  }, [data, Sunburst, color]);
+
   return (
-    <div id="chart-map" className="mb-6"></div>
+    <div ref={chartRef} className="mb-6"></div>
   );
 };
 
