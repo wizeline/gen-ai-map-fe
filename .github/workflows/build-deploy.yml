@@ -36,7 +36,7 @@ jobs:
           rm -rf node_modules package-lock.json
       - name: Install & Build
         run: |
-          npm ci
+          npm install
           npm run build
       - name: Setup Pages
         uses: actions/configure-pages@v4
