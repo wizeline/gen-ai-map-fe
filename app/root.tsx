@@ -5,6 +5,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import './tailwind.css';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -12,6 +13,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script id="gen-ai-map" data-boxid="chart-map" data-charttype="" src="https://gen-ai-tools-public.s3.amazonaws.com/assets/map.js"></script>
         <Meta />
         <Links />
       </head>
