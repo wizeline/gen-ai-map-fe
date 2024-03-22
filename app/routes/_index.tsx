@@ -1,7 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
 import { useEffect, useState } from "react";
 import HeaderMinimalist from "~/components/header/HeaderMinimalist";
-import SunburstChart from "~/components/sunburstChart/SunburstChart";
 
 export const meta: MetaFunction = () => {
   return [
@@ -19,10 +18,11 @@ export default function Index() {
         .then(data => setJsonData(data));
   }, [])
   
+  console.log(jsonData);
+
   return (
     <div className="min-h-screen flex flex-col justify-between">
       <HeaderMinimalist />
-      {jsonData && <SunburstChart data={jsonData} />}
     </div>
   );
 }

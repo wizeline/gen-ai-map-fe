@@ -7,4 +7,9 @@
 body {
     @apply bg-app-bg;
     font-family: 'Nunito', 'Montserrat', sans-serif;
+    background-image: url("assets/images/bg.png");
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
