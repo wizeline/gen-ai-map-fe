@@ -62,14 +62,14 @@ export default function Index() {
     <div className="min-h-screen flex flex-col justify-between relative">
       <div className="absolute left-0 top-0 sm:ml-auto sm:mr-auto sm:left-0 sm:right-0">
         <HeaderIcon className="ml-4 mt-4" />
-        <div className="hidden sm:block absolute right-0 top-0 mt-4 mr-4">
-          <TopNavigation
-            newNotifications={newNotifications}
-            notifications={notifications}
-          />
-        </div>
       </div>
-      {!jsonData ? <Loader /> : <SunburstChart data={jsonData} />}
+      <div className="hidden sm:block absolute right-0 top-0 mt-4 mr-4">
+        <TopNavigation
+          newNotifications={newNotifications}
+          notifications={notifications}
+        />
+      </div>
+      {!jsonData ? <Loader /> : <div className="min-h-screen flex flex-col justify-between items-center"><SunburstChart data={jsonData} /></div>}
       <div className="hidden sm:block absolute bottom-0 left-0 mb-4 ml-4">
         <Breadcrumb
           path={["Data and Simulation Generation", "Customer Segmentation"]}

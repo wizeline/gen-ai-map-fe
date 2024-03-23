@@ -79,6 +79,7 @@ const SunburstChart = (props: SunburstElementProps) => {
         .onHover((node: any) => {
           setSelectedNode(node);
         })
+        .width(800)
         .tooltipContent((d: any, node: any) => `Size: <i>${node.value}</i>`)(
         chartRef.current
       );
@@ -91,7 +92,7 @@ const SunburstChart = (props: SunburstElementProps) => {
     }
   }, [selectedNode]);
 
-  return <div ref={chartRef}></div>;
+  return <div ref={chartRef} className="max-w-[800px] z-0"></div>;
 };
 
 export default SunburstChart;
