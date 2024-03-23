@@ -25,6 +25,8 @@ const SunburstChart = (props: SunburstElementProps) => {
   const color = d3.scaleOrdinal(d3.schemeSet1);
   const chartRef = useRef<HTMLDivElement | null>(null);
   const [Sunburst, setSunburst] = useState<any | null>(null);
+  const [selectedNode, setSelectedNode] = useState<any | null>(null);
+  const [hasChildNodes, setHasChildNodes] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
 
   const handleIsInfoModalOpen = () => {
@@ -35,6 +37,28 @@ const SunburstChart = (props: SunburstElementProps) => {
     setIsInfoModalOpen(false);
   };
 
+  console.log({
+    isInfoModalOpen,
+    handleIsInfoModalClose,
+    handleIsInfoModalOpen,
+  });
+
+  useEffect(() => {
+    if (chartRef.current) {
+      const observer = new MutationObserver((mutationsList) => {
+        for (const mutation of mutationsList) {
+          if (mutation.type === "childList") {
+            setHasChildNodes(chartRef.current?.hasChildNodes() ?? false);
+          }
+        }
+      });
+
+      observer.observe(chartRef.current, { childList: true });
+
+      return () => observer.disconnect();
+    }
+  }, []);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       import("sunburst-chart").then((module) => {
@@ -44,7 +68,7 @@ const SunburstChart = (props: SunburstElementProps) => {
   }, []);
 
   useEffect(() => {
-    if (data && Sunburst) { 
+    if (data && Sunburst && !hasChildNodes) {
       const chart = Sunburst();
       chart
         .data(data)
@@ -52,18 +76,22 @@ const SunburstChart = (props: SunburstElementProps) => {
         .labelOrientation("angular")
         .maxLevels(10)
         .color((d: any, parent: any) => color(parent ? parent.data.name : null))
-        .focusOnNode((node: any) => {
-            console.log(node);
+        .onHover((node: any) => {
+          setSelectedNode(node);
         })
         .tooltipContent((d: any, node: any) => `Size: <i>${node.value}</i>`)(
         chartRef.current
       );
     }
-  }, [data, Sunburst, color]);
+  }, [data, Sunburst, color, hasChildNodes]);
 
-  return (
-    <div ref={chartRef}></div>
-  );
+  useEffect(() => {
+    if (selectedNode) {
+      console.log(selectedNode);
+    }
+  }, [selectedNode]);
+
+  return <div ref={chartRef}></div>;
 };
 
 export default SunburstChart;
