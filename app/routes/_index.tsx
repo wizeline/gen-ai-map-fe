@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import HeaderIcon from "~/components/icons/HeaderIcon";
 import { Loader } from "~/components/loader/Loader";
 import { TopNavigation } from "~/components/navigation/TopNavigation";
-import { ModalUpdates } from "~/components/updates/ModalUpdates";
-import { Notification } from "~/types";
+import { NotificationType } from "~/types";
 
 export const meta: MetaFunction = () => {
   return [
@@ -15,7 +14,7 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   const [jsonData, setJsonData] = useState(null);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notifications, setNotifications] = useState<NotificationType[]>([]);
   const newNotifications = notifications.length > 0 && notifications.some(notification => {
     const notificationDate = new Date(notification?.date);
     const today = new Date();
@@ -51,8 +50,7 @@ export default function Index() {
       <div className="absolute left-0 top-0 sm:ml-auto sm:mr-auto sm:left-0 sm:right-0">
         <HeaderIcon className="ml-4 mt-4" />
         <div className="hidden sm:block absolute right-0 top-0 mt-4 mr-4">
-          <TopNavigation newNotifications={newNotifications} />
-          <ModalUpdates notifications={notifications} onClose={() => {}} />
+          <TopNavigation newNotifications={newNotifications} notifications={notifications} />
         </div>
       </div>
       {!jsonData ? <Loader /> : (

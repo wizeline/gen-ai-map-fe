@@ -1,17 +1,18 @@
 import React from 'react';
-import { Notification } from '~/types';
+import { NotificationType } from '~/types';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import CircleIcon from '@mui/icons-material/Circle';
 
 interface ModalUpdatesProps {
-  notifications: Notification[];
+  notifications: NotificationType[];
   onClose: () => void;
+  className?: string;
 }
 
-export const ModalUpdates: React.FC<ModalUpdatesProps> = ({ notifications, onClose }) => {
+export const ModalUpdates: React.FC<ModalUpdatesProps> = ({ notifications, onClose, className }) => {
   return (
-    <div className="w-[280px] h-64 max-h-64 border border-top-nav-border rounded overflow-hidden">
+    <div className={`w-[280px] h-64 max-h-64 border border-top-nav-border rounded overflow-hidden ${className}`}>
       <div className="flex justify-between items-center bg-primary text-white p-2 rounded-t">
       <h2 className="ml-2 font-bold text-sm leading-normal font-montserrat">What’s new?</h2>
         <IconButton className="!p-0" onClick={onClose}>
