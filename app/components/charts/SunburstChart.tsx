@@ -78,7 +78,6 @@ const SunburstChart = (props: SunburstElementProps) => {
         .maxLevels(10)
         .color((d: any, parent: any) => color(parent ? parent.data.name : null))
         .onHover((node: any) => {
-          console.log(node);
           if (node) {
             setSelectedNode(node);
           }
