@@ -103,6 +103,10 @@ const SunburstChart = (props: SunburstElementProps) => {
             } else {
               setSelectedNode(null);
             }
+          } else {
+            if (onSelectNode) {
+              onSelectNode([]);
+            }
           }
           if (!isInfoModalOpen) {
             handleIsInfoModalOpen();
