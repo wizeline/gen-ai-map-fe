@@ -4,6 +4,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { IconButton } from "@mui/material";
 import { FC } from "react";
 import { NodeType } from "~/types";
+import Pill from "../common/Pill";
 
 interface ModalInformationProps {
   node: NodeType | null;
@@ -11,7 +12,22 @@ interface ModalInformationProps {
 }
 
 const ModalInformation: FC<ModalInformationProps> = ({ node, onClose }) => {
-  console.log(node?.__dataNode);
+  // TODO - Replace information with actual data from the node
+  const features = [
+    "Integrations to connect Fireflies with other meeting platforms like Google Meet, Zoom, Microsoft Teams, Skype, and more.",
+    "Rich text editing features to correct, comment, annotate, and format transcripts as needed.",
+    "Smart summaries to grab the key points, next steps, questions, and discussion highlights from your meeting.",
+    "Search and organization features to isolate words, phrases, and topics in your transcripts.",
+  ];
+  const tools = [
+    "ClickUp",
+    "ChatGPT",
+    "Jasper",
+    "Spinach",
+    "GrammarlyGO",
+    "Figstack",
+  ];
+
   return (
     <div className="fixed top-4 right-4 w-96 h-auto max-h-[90vh] bg-secondary rounded-md p-2 gap-2 overflow-auto z-50">
       <div className="flex justify-between items-center mb-2">
@@ -88,22 +104,9 @@ const ModalInformation: FC<ModalInformationProps> = ({ node, onClose }) => {
         </h3>
         <div className="font-normal text-[14px] leading-[18px] text-white-alt pl-4">
           <ul className="list-disc">
-            <li>
-              Integrations to connect Fireflies with other meeting platforms
-              like Google Meet, Zoom, Microsoft Teams, Skype, and more.
-            </li>
-            <li>
-              Rich text editing features to correct, comment, annotate, and
-              format transcripts as needed.
-            </li>
-            <li>
-              Smart summaries to grab the key points, next steps, questions, and
-              discussion highlights from your meeting.
-            </li>
-            <li>
-              Search and organization features to isolate words, phrases, and
-              topics in your transcripts.
-            </li>
+            {features.map((feature, index) => (
+              <li key={`${feature}-${index}`}>{feature}</li>
+            ))}
           </ul>
         </div>
       </div>
@@ -124,14 +127,16 @@ const ModalInformation: FC<ModalInformationProps> = ({ node, onClose }) => {
           <span className="font-normal"> $20 per user, per month</span>
         </p>
       </div>
-      {/*Array(6)
-        .fill(0)
-        .map((_, i) => (
-          <div key={i} className="border border-primary rounded-md p-2 mb-2">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
-            nisl eros, pulvinar facilisis justo mollis, auctor consequat urna.
-          </div>
-        ))*/}
+      <div className="border border-primary rounded-md p-4 mb-2">
+        <h3 className="font-bold text-[12px] leading-[16px] text-blue300 mb-2">
+          Related tools
+        </h3>
+        <div className="flex flex-wrap gap-2">
+          {tools.map((tool, index) => (
+            <Pill key={`${tool}-${index}`}>{tool}</Pill>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
