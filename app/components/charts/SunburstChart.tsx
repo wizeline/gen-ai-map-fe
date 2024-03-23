@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
+import { useScreenSize } from "~/context/ScreenSizeContext";
 
 export type SunburstLeaf = {
   name: string;
@@ -28,6 +29,8 @@ const SunburstChart = (props: SunburstElementProps) => {
   const [selectedNode, setSelectedNode] = useState<any | null>(null);
   const [hasChildNodes, setHasChildNodes] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const { isDesktop, isTablet } = useScreenSize();
+  const chartWidth = isDesktop ? 800 : isTablet ? 600 : 300;
 
   const handleIsInfoModalOpen = () => {
     setIsInfoModalOpen(true);
@@ -79,12 +82,12 @@ const SunburstChart = (props: SunburstElementProps) => {
         .onHover((node: any) => {
           setSelectedNode(node);
         })
-        .width(800)
+        .width(chartWidth)
         .tooltipContent((d: any, node: any) => `Size: <i>${node.value}</i>`)(
         chartRef.current
       );
     }
-  }, [data, Sunburst, color, hasChildNodes]);
+  }, [data, Sunburst, color, hasChildNodes, chartWidth]);
 
   useEffect(() => {
     if (selectedNode) {
