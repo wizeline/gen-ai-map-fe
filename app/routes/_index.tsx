@@ -1,5 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
 import { useEffect, useState } from "react";
+import { Breadcrumb } from "~/components/breadcrumb/Breadcrumb";
 import HeaderIcon from "~/components/icons/HeaderIcon";
 import { Loader } from "~/components/loader/Loader";
 import { TopNavigation } from "~/components/navigation/TopNavigation";
@@ -63,7 +64,10 @@ export default function Index() {
         <div>
         </div>
       )}
-      <div className="absolute bottom-0 right-0 mb-4 mr-4">
+      <div className="hidden sm:block absolute bottom-0 left-0 mb-4 ml-4">
+        <Breadcrumb path={['Data and Simulation Generation', 'Customer Segmentation']} />
+        </div>
+      <div className="hidden sm:block absolute bottom-0 right-0 mb-4 mr-4">
         <ZoomControl zoomPercentage={zoomPercentage} onZoomChange={handleZoomChange} />
       </div>
     </div>

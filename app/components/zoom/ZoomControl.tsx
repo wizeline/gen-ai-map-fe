@@ -26,7 +26,7 @@ export const ZoomControl: React.FC<Props> = ({ zoomPercentage, onZoomChange }: P
             <IconButton className="!p-0" onClick={handleZoomOut}>
                 <ZoomOutIcon className="w-5 h-5 !fill-white cursor-pointer" />
             </IconButton>
-            <span className="text-white">{zoomPercentage}%</span>
+            <span className="text-white font-montserrat font-bold text-xs leading-4">{zoomPercentage}%</span>
             <IconButton className="!p-0" onClick={handleZoomIn}>
                 <ZoomInIcon className="w-5 h-5 !fill-white cursor-pointer" />
             </IconButton>
