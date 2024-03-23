@@ -13,7 +13,7 @@ interface ModalInformationProps {
 const ModalInformation: FC<ModalInformationProps> = ({ node, onClose }) => {
   console.log(node?.__dataNode);
   return (
-    <div className="fixed top-4 right-4 w-96 h-auto bg-secondary rounded-md p-2 gap-2 overflow-auto z-50">
+    <div className="fixed top-4 right-4 w-96 h-auto max-h-[90vh] bg-secondary rounded-md p-2 gap-2 overflow-auto z-50">
       <div className="flex justify-between items-center mb-2">
         <h2 className="text-white border border-primary p-4 mr-2 w-full rounded-md">
           {node?.name}
@@ -80,6 +80,48 @@ const ModalInformation: FC<ModalInformationProps> = ({ node, onClose }) => {
           Regardless of accent, dialect, industry, or language, this meeting
           assistant can detect even the smallest differences in speech for
           precise transcriptions on the first try.{" "}
+        </p>
+      </div>
+      <div className="border border-primary rounded-md p-4 mb-2">
+        <h3 className="font-bold text-[12px] leading-[16px] text-blue300 mb-2">
+          Best features
+        </h3>
+        <div className="font-normal text-[14px] leading-[18px] text-white-alt pl-4">
+          <ul className="list-disc">
+            <li>
+              Integrations to connect Fireflies with other meeting platforms
+              like Google Meet, Zoom, Microsoft Teams, Skype, and more.
+            </li>
+            <li>
+              Rich text editing features to correct, comment, annotate, and
+              format transcripts as needed.
+            </li>
+            <li>
+              Smart summaries to grab the key points, next steps, questions, and
+              discussion highlights from your meeting.
+            </li>
+            <li>
+              Search and organization features to isolate words, phrases, and
+              topics in your transcripts.
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div className="border border-primary rounded-md p-4 mb-2">
+        <h3 className="font-bold text-[12px] leading-[16px] text-blue300 mb-2">
+          Pricing
+        </h3>
+        <p className="text-[14px] leading-[18px] text-white-alt">
+          <span className="font-bold">Personal:</span>
+          <span className="font-normal"> Free</span>
+        </p>
+        <p className="text-[14px] leading-[18px] text-white-alt">
+          <span className="font-bold">Professional:</span>
+          <span className="font-normal"> $10 per month</span>
+        </p>
+        <p className="text-[14px] leading-[18px] text-white-alt">
+          <span className="font-bold">Team:</span>
+          <span className="font-normal"> $20 per user, per month</span>
         </p>
       </div>
       {/*Array(6)
