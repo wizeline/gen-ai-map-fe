@@ -21,6 +21,14 @@ export const TopNavigation: React.FC<Props> = ({ newNotifications, notifications
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
+
+	const handleOnClick = () => {
+		if (isModalOpen) {
+			handleCloseModal();
+		} else {
+			handleOpenModal();
+		}
+	};
  
 	return (<>
 	<div className="flex justify-between items-center border border-top-nav-border rounded w-28 h-9 p-2 bg-primary">
@@ -30,7 +38,7 @@ export const TopNavigation: React.FC<Props> = ({ newNotifications, notifications
 		<IconButton className="!p-0" onClick={() => {}}>
 			<ShareOutlinedIcon className="w-5 h-5 !fill-white cursor-pointer" />
 		</IconButton>
-		<IconButton className="!p-0" onClick={handleOpenModal}>
+		<IconButton className="!p-0" onClick={handleOnClick}>
 			{ !newNotifications ? <NotificationsOutlinedIcon className="w-5 h-5 !fill-white cursor-pointer" />
 			: 
 				<Badge
@@ -43,6 +51,6 @@ export const TopNavigation: React.FC<Props> = ({ newNotifications, notifications
 				</Badge> } 
 		</IconButton>
 	</div>
-	{isModalOpen && <ModalUpdates notifications={notifications} onClose={handleCloseModal} className='fixed top-14 right-4 w-full h-full z-50' />}
+	{isModalOpen && <ModalUpdates notifications={notifications} onClose={handleCloseModal} className='fixed top-14 right-4 z-50' />}
 	</>);
 };
