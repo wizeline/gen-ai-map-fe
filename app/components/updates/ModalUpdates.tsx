@@ -1,7 +1,7 @@
 import React from "react";
 import { NotificationType } from "~/types";
 import CloseIcon from "@mui/icons-material/Close";
-import IconButton from "@mui/material/IconButton";
+import { IconButton } from "@mui/material";
 import CircleIcon from "@mui/icons-material/Circle";
 
 interface ModalUpdatesProps {
