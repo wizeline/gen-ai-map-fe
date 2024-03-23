@@ -1,0 +1,20 @@
+export type NodeType = {
+  name: string;
+  value: number;
+  __dataNode: DataNodeType;
+};
+
+export type DataNodeType = {
+  __dataNode: DataNodeType;
+  data: NodeType;
+  depth: number;
+  height: number;
+  id: number;
+  parent: NodeType | null;
+  children: NodeType[] | null;
+  value: number;
+  x0: number;
+  x1: number;
+  y0: number;
+  y1: number;
+};

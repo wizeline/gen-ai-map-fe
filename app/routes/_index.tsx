@@ -48,7 +48,7 @@ export default function Index() {
       {
         id: 1,
         description: "ClickUp now is included as an AI Coding Tool",
-        date: "2024-03-23T00:00:00.000Z",
+        date: "2025-03-23T00:00:00.000Z",
       },
       {
         id: 2,
