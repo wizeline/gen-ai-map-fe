@@ -5,6 +5,7 @@ import * as d3 from "d3";
 import { useScreenSize } from "~/context/ScreenSizeContext";
 import ModalInformation from "../information/ModalInformation";
 import { NodeType } from "~/types";
+import { hierarchy } from "d3";
 
 export type SunburstLeaf = {
   name: string;
@@ -21,10 +22,11 @@ export type SunburstNode = {
 
 interface SunburstElementProps {
   data: SunburstNode | undefined;
+  onSelectNode?: (args: any) => void;
 }
 
 const SunburstChart = (props: SunburstElementProps) => {
-  const { data } = props;
+  const { data, onSelectNode } = props;
   const color = d3.scaleOrdinal(d3.schemeSet1);
   const chartRef = useRef<HTMLDivElement | null>(null);
   const [Sunburst, setSunburst] = useState<any | null>(null);
@@ -79,23 +81,53 @@ const SunburstChart = (props: SunburstElementProps) => {
         .color((d: any, parent: any) => color(parent ? parent.data.name : null))
         .onHover((node: any) => {
           if (node) {
-            setSelectedNode(node);
+            let lastPath = "";
+
+            hierarchy(data, (d: any) => d.children)
+              .sum((d) => d.size)
+              .sort((a, b) => (b.value ? b.value : 0) - (a.value ? a.value : 0))
+              .each((nodeI) => {
+                if (node.name === nodeI.data.name) {
+                  lastPath = nodeI
+                    .ancestors()
+                    .map((d) => d.data.name)
+                    .reverse()
+                    .join("/");
+                }
+              });
+
+            onSelectNode && onSelectNode(lastPath.split("/"));
+
+            if (!node.children) {
+              setSelectedNode(node);
+            } else {
+              setSelectedNode(null);
+            }
           }
           if (!isInfoModalOpen) {
             handleIsInfoModalOpen();
           }
         })
         .width(chartWidth)
+        .tooltipTitle(() => "")
         .tooltipContent((d: any, node: any) => `Size: <i>${node.value}</i>`)(
         chartRef.current
       );
     }
-  }, [data, Sunburst, color, hasChildNodes, chartWidth, isInfoModalOpen]);
+  }, [
+    data,
+    Sunburst,
+    color,
+    hasChildNodes,
+    chartWidth,
+    isInfoModalOpen,
+    onSelectNode,
+  ]);
 
   return (
     <>
       <div ref={chartRef} className="max-w-[800px] z-0"></div>
-      {isInfoModalOpen && selectedNode && (
+      {isInfoModalOpen && selectedNode && !selectedNode?.children && (
         <ModalInformation
           onClose={handleIsInfoModalClose}
           node={selectedNode}

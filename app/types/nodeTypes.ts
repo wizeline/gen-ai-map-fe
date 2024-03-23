@@ -2,6 +2,7 @@ export type NodeType = {
   name: string;
   value: number;
   __dataNode: DataNodeType;
+  children?: NodeType[] | null;
 };
 
 export type DataNodeType = {

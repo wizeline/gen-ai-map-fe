@@ -31,6 +31,7 @@ export default function Index() {
       return notificationDate >= today;
     });
   const [zoomPercentage, setZoomPercentage] = useState(100);
+  const [nodeAncestors, setNodeAncestors] = useState<string[]>([]);
 
   const handleZoomChange = (newZoomPercentage: number) => {
     setZoomPercentage(newZoomPercentage);
@@ -69,10 +70,10 @@ export default function Index() {
           notifications={notifications}
         />
       </div>
-      {!jsonData ? <Loader /> : <div className="min-h-screen flex flex-col justify-between items-center"><SunburstChart data={jsonData} /></div>}
+      {!jsonData ? <Loader /> : <div className="min-h-screen flex flex-col justify-between items-center"><SunburstChart data={jsonData} onSelectNode={setNodeAncestors} /></div>}
       <div className="hidden sm:block absolute bottom-0 left-0 mb-4 ml-4">
         <Breadcrumb
-          path={["Data and Simulation Generation", "Customer Segmentation"]}
+          path={nodeAncestors}
         />
       </div>
       <div className="hidden sm:block absolute bottom-0 right-0 mb-4 mr-4">
