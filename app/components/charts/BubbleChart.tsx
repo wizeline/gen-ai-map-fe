@@ -15,6 +15,7 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [isSVGRendered, setIsSVGRendered] = useState(false);
   const [zoomPercentage, setZoomPercentage] = useState(100);
+  const [selectedNode, setSelectedNode] = useState<any>(null);
 
   const handleZoomChange = (newZoomPercentage: number) => {
     setZoomPercentage(newZoomPercentage);
@@ -43,25 +44,39 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
     const root = pack(data);
 
     const svg = d3.select(svgRef.current)
-      .attr("viewBox", `-${width / 2} -${height / 2} ${width} ${height}`)
-      .attr("width", width)
-      .attr("height", height)
-      .attr("style", `max-width: 100%; height: auto; display: block; margin: 0 -14px; background: transparent; cursor: pointer;`);
+        .attr("viewBox", `-${width / 2} -${height / 2} ${width} ${height}`)
+        .attr("width", width)
+        .attr("height", height)
+        .attr("style", `position: absolute; top: -55; max-width: 100%; height: auto; display: block; margin: 0 -14px; background: transparent; cursor: pointer;`);
 
     const node = svg.append("g")
       .selectAll<SVGCircleElement, unknown>("circle")
       .data(root.descendants().slice(1))
       .join("circle")
-        .attr("fill", d => d.children ? color(d.depth) : "white")
+        .attr("fill", d => d.children ? color(d.depth) : "red")
         .style("visibility", d => d.depth > 1 ? "hidden" : "visible")
-        .attr("pointer-events", d => !d.children ? "none" : null)
+        //.attr("pointer-events", d => !d.children ? "none" : null)
         .on("mouseover", function() { d3.select(this).attr("stroke", "#000"); })
         .on("mouseout", function() { d3.select(this).attr("stroke", null); })
-        .on("click", (event, d) =>{
-            focus !== d && (zoom(event, d), event.stopPropagation());
-            d3.selectAll("circle").filter((dd: any) => dd.parent === d).style("visibility", "visible");
-            onSelectNode && onSelectNode(["s", "dfsd"]);
-        });
+        .on("click", (event, d) => {
+            if (d.children) {
+                setSelectedNode(null);
+              focus !== d && (zoom(event, d), event.stopPropagation());
+              d3.selectAll("circle").filter((dd: any) => dd.parent === d).style("visibility", "visible");
+            } else {
+                setSelectedNode(d);
+                event.stopPropagation();
+            }
+          
+            const nodePath = [];
+            let currentNode: any = d;
+            while(currentNode) {
+              nodePath.unshift(currentNode.data.name);
+              currentNode = currentNode.parent;
+            }
+          
+            onSelectNode && onSelectNode(nodePath);
+          });
 
     const label = svg.append("g")
       .style("font", "10px sans-serif")
@@ -74,7 +89,9 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
         .style("display", d => d.parent === root ? "inline" : "none")
         .text((d: any) => d.data.name);
 
-        svg.on("click", (event) => zoom(event, root));
+        svg.on("click", (event) => { 
+            zoom(event, root);
+        });
     let focus = root;
     let view: [number, number, number];
     zoomTo([focus.x, focus.y, focus.r * 2]);
@@ -90,6 +107,8 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
     }
 
     function zoom(event: d3.D3ZoomEvent<SVGSVGElement, unknown>, d: any) {
+      if (selectedNode !== null || !d.children) return;
+
       const focus0 = focus;
 
       focus = d;
