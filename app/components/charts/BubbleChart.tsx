@@ -18,6 +18,7 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
   const [zoomPercentage, setZoomPercentage] = useState(100);
   const [selectedNode, setSelectedNode] = useState<NodeType | null>(null);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const colors = ["#E93D44", "#3B72A4", "#203449", "#751F22", "#E5C8A6", "#4D5D6D"];
 
   const handleIsInfoModalOpen = () => {
     setIsInfoModalOpen(true);
@@ -35,7 +36,6 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
 
   useEffect(() => {
     if (selectedNode) {
-        console.log(selectedNode);
       handleIsInfoModalOpen();
     }
   }, [selectedNode]);
@@ -117,6 +117,7 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
       .selectAll<SVGTextElement, unknown>("text")
       .data(root.descendants())
       .join("text")
+      .style("fill", "#ffffff")
       .style("fill-opacity", (d) => (d.parent === root ? 1 : 0))
       .style("display", (d) => (d.parent === root ? "inline" : "none"))
       .text((d: any) => d.data.name);
