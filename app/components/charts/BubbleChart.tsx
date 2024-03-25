@@ -14,6 +14,7 @@ interface BubbleChartProps {
 }
 
 const colors = ["#E93D44", "#3B72A4", "#203449", "#751F22", "#E5C8A6", "#4D5D6D"];
+const minNodeRadius = 100;
 
 const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -132,6 +133,10 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
         const name = d.data.name;
         const value = d.value;
         const nameParts = name.split(' ');
+
+        if (d.depth === 1 && d.r < minNodeRadius) {
+            return;
+        }
     
         // Add first line
         d3.select(this)
