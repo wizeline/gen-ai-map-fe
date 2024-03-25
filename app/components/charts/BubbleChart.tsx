@@ -4,6 +4,7 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { NodeType } from '~/types';
+import { ZoomControl } from '../zoom/ZoomControl';
 
 interface BubbleChartProps {
   data: NodeType;
@@ -13,6 +14,12 @@ interface BubbleChartProps {
 const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [isSVGRendered, setIsSVGRendered] = useState(false);
+  const [zoomPercentage, setZoomPercentage] = useState(100);
+
+  const handleZoomChange = (newZoomPercentage: number) => {
+    setZoomPercentage(newZoomPercentage);
+    // TODO: Add here the zoom handler for the chart
+  };
 
   useEffect(() => {
     if (!svgRef.current || isSVGRendered) return;
@@ -102,7 +109,15 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
     setIsSVGRendered(true);
   }, [data, isSVGRendered, onSelectNode]);
 
-  return <svg ref={svgRef}></svg>;
+  return(<>
+    <svg ref={svgRef}></svg>
+    <div className="hidden sm:block absolute bottom-0 right-0 mb-4 mr-4">
+        <ZoomControl
+          zoomPercentage={zoomPercentage}
+          onZoomChange={handleZoomChange}
+        />
+      </div>
+  </>);
 }
 
 export default BubbleChart;
