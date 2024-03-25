@@ -78,9 +78,13 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
       .selectAll<SVGCircleElement, unknown>("circle")
       .data(root.descendants().slice(1))
       .join("circle")
-      .attr("fill", (d) => (d.children ? color(d.depth) : "#00A7E5"))
+      .attr("fill", (d, index) => {
+        if (d.depth === 1) {
+          return colors[index % colors.length];
+        }
+        return d.children ? color(d.depth) : "#00A7E5";
+      })
       .style("visibility", (d) => (d.depth > 1 ? "hidden" : "visible"))
-      //.attr("pointer-events", d => !d.children ? "none" : null)
       .on("mouseover", function () {
         d3.select(this).attr("stroke", "#000");
       })
