@@ -1,7 +1,8 @@
 import type { MetaFunction } from "@remix-run/node";
 import { useEffect, useState } from "react";
 import { Breadcrumb } from "~/components/breadcrumb/Breadcrumb";
-import SunburstChart from "~/components/charts/SunburstChart";
+import BubbleChart from "~/components/charts/BubbleChart";
+//import SunburstChart from "~/components/charts/SunburstChart";
 import HeaderIcon from "~/components/icons/HeaderIcon";
 import { Loader } from "~/components/loader/Loader";
 import { TopNavigation } from "~/components/navigation/TopNavigation";
@@ -70,7 +71,8 @@ export default function Index() {
           notifications={notifications}
         />
       </div>
-      {!jsonData ? <Loader /> : <div className="min-h-screen flex flex-col justify-between items-center"><SunburstChart data={jsonData} onSelectNode={setNodeAncestors} /></div>}
+      {/*!jsonData ? <Loader /> : <div className="min-h-screen flex flex-col justify-between items-center"><SunburstChart data={jsonData} onSelectNode={setNodeAncestors} /></div>*/}
+      {!jsonData ? <Loader /> : <div className="min-h-screen flex flex-col justify-between items-center"><BubbleChart data={jsonData} onSelectNode={setNodeAncestors} /></div>}
       <div className="hidden sm:block absolute bottom-0 left-0 mb-4 ml-4">
         <Breadcrumb
           path={nodeAncestors}
