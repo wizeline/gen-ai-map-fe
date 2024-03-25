@@ -20,6 +20,7 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   const [jsonData, setJsonData] = useState(null);
+  const [jsonModalData, setJsonModalData] = useState(null);
   const [notifications, setNotifications] = useState<NotificationType[]>([]);
   const newNotifications =
     notifications.length > 0 &&
@@ -36,6 +37,12 @@ export default function Index() {
     fetch("https://gen-ai-tools-public.s3.amazonaws.com/map-tree.json")
       .then((response) => response.json())
       .then((data) => setJsonData(data));
+  }, []);
+
+  useEffect(() => {
+    fetch("https://gen-ai-tools-public.s3.amazonaws.com/gen-ai-map.json")
+      .then((response) => response.json())
+      .then((data) => setJsonModalData(data));
   }, []);
 
   useEffect(() => {
@@ -66,11 +73,19 @@ export default function Index() {
         />
       </div>
       {/*!jsonData ? <Loader /> : <div className="min-h-screen flex flex-col justify-between items-center"><SunburstChart data={jsonData} onSelectNode={setNodeAncestors} /></div>*/}
-      {!jsonData ? <Loader /> : <div className="min-h-screen flex flex-col justify-between items-center"><BubbleChart data={jsonData} onSelectNode={setNodeAncestors} /></div>}
+      {!jsonData ? (
+        <Loader />
+      ) : (
+        <div className="min-h-screen flex flex-col justify-between items-center">
+          <BubbleChart
+            data={jsonData}
+            modalData={jsonModalData}
+            onSelectNode={setNodeAncestors}
+          />
+        </div>
+      )}
       <div className="hidden sm:block absolute bottom-0 left-0 mb-4 ml-4">
-        <Breadcrumb
-          path={nodeAncestors}
-        />
+        <Breadcrumb path={nodeAncestors} />
       </div>
     </div>
   );

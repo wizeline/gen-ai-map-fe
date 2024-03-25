@@ -10,6 +10,7 @@ import { useScreenSize } from "~/context/ScreenSizeContext";
 
 interface BubbleChartProps {
   data: NodeType;
+  modalData: any;
   onSelectNode?: (args: any) => void;
 }
 
@@ -23,7 +24,11 @@ const colors = [
 ];
 const minNodeRadius = 100;
 
-const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
+const BubbleChart: FC<BubbleChartProps> = ({
+  data,
+  modalData,
+  onSelectNode,
+}) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [isSVGRendered, setIsSVGRendered] = useState(false);
   const [zoomPercentage, setZoomPercentage] = useState(100);
@@ -255,6 +260,7 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
         <ModalInformation
           onClose={handleIsInfoModalClose}
           node={selectedNode}
+          modalData={modalData}
         />
       )}
       <div className="hidden sm:block absolute bottom-0 right-0 mb-4 mr-4">

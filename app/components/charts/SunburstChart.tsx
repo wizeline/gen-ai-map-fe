@@ -131,6 +131,7 @@ const SunburstChart = (props: SunburstElementProps) => {
         <ModalInformation
           onClose={handleIsInfoModalClose}
           node={selectedNode}
+          modalData={{}}
         />
       )}
     </>
