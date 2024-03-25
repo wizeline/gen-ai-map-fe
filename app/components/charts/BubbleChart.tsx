@@ -24,6 +24,10 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const { isDesktop, isTablet } = useScreenSize();
   const size = isDesktop ? 900 : isTablet ? 600 : 300;
+  const domainMinValue = 0
+  const domainMaxValue = 5;
+  const minFontSize = 1;
+  const maxFontSize = 22;
 
   const handleIsInfoModalOpen = () => {
     setIsInfoModalOpen(true);
@@ -55,7 +59,7 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
 
     const color = d3
       .scaleLinear<string>()
-      .domain([0, 5])
+      .domain([domainMinValue, domainMaxValue])
       .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
       .interpolate(d3.interpolateHcl);
 
@@ -134,11 +138,12 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
         const value = d.value;
         const nameParts = name.split(' ');
 
-        if (d.depth === 1 && d.r < minNodeRadius) {
-            return;
-        }
-    
-        // Add first line
+        const fontSizeScale = d3.scaleLinear().domain([0, width / 4]).range([minFontSize, maxFontSize]);
+        const fontSizeScaleTools = d3.scaleLinear().domain([0, width / 2]).range([minFontSize, maxFontSize]);
+
+        const fontSize = d.depth === 1 ? fontSizeScale(d.r) : 22;
+        const fontSizeTools = d.depth === 1 ? fontSizeScaleTools(d.r) : 12; 
+
         d3.select(this)
             .append('tspan')
             .attr('x', 0)
@@ -146,7 +151,7 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
             .text(nameParts[0])
             .style("font-family", "Montserrat")
             .style("font-weight", "700")
-            .style("font-size", "22px")
+            .style("font-size", `${fontSize}px`)
             .style("line-height", "34px");
     
         // Add second line
@@ -158,7 +163,7 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
             .text(nameParts.slice(1).join(' '))
             .style("font-family", "Montserrat")
             .style("font-weight", "700")
-            .style("font-size", "22px")
+            .style("font-size", `${fontSize}px`)
             .style("line-height", "34px");
         }
     
@@ -170,7 +175,7 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
                 .text(value + " Tools")
                 .style("font-family", "Nunito")
                 .style("font-weight", "700")
-                .style("font-size", "12px")
+                .style("font-size", `${fontSizeTools}px`)
                 .style("line-height", "18px")
                 .style("text-anchor", "middle")
         }
