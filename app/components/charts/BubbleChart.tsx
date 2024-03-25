@@ -13,7 +13,14 @@ interface BubbleChartProps {
   onSelectNode?: (args: any) => void;
 }
 
-const colors = ["#E93D44", "#3B72A4", "#203449", "#751F22", "#E5C8A6", "#4D5D6D"];
+const colors = [
+  "#E93D44",
+  "#3B72A4",
+  "#203449",
+  "#751F22",
+  "#E5C8A6",
+  "#4D5D6D",
+];
 const minNodeRadius = 100;
 
 const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
@@ -24,7 +31,7 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const { isDesktop, isTablet } = useScreenSize();
   const size = isDesktop ? 900 : isTablet ? 600 : 300;
-  const domainMinValue = 0
+  const domainMinValue = 0;
   const domainMaxValue = 5;
   const minFontSize = 1;
   const maxFontSize = 22;
@@ -64,7 +71,7 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
       .interpolate(d3.interpolateHcl);
 
     const pack = (data: any) =>
-    d3.pack().size([width, height]).padding(3)(
+      d3.pack().size([width, height]).padding(3)(
         d3
           .hierarchy(data)
           .sum((d: any) => d.value)
@@ -133,53 +140,59 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
       .style("fill", "#ffffff")
       .style("fill-opacity", (d) => (d.parent === root ? 1 : 0))
       .style("display", (d) => (d.parent === root ? "inline" : "none"))
-    .each(function (d: any) {
+      .each(function (d: any) {
         const name = d.data.name;
         const value = d.value;
-        const nameParts = name.split(' ');
+        const nameParts = name.split(" ");
 
-        const fontSizeScale = d3.scaleLinear().domain([0, width / 4]).range([minFontSize, maxFontSize]);
-        const fontSizeScaleTools = d3.scaleLinear().domain([0, width / 2]).range([minFontSize, maxFontSize]);
+        const fontSizeScale = d3
+          .scaleLinear()
+          .domain([0, width / 4])
+          .range([minFontSize, maxFontSize]);
+        const fontSizeScaleTools = d3
+          .scaleLinear()
+          .domain([0, width / 2])
+          .range([minFontSize, maxFontSize]);
 
         const fontSize = d.depth === 1 ? fontSizeScale(d.r) : 22;
-        const fontSizeTools = d.depth === 1 ? fontSizeScaleTools(d.r) : 12; 
+        const fontSizeTools = d.depth === 1 ? fontSizeScaleTools(d.r) : 12;
 
         d3.select(this)
-            .append('tspan')
-            .attr('x', 0)
-            .attr('y', '-0.3em')
-            .text(nameParts[0])
-            .style("font-family", "Montserrat")
-            .style("font-weight", "700")
-            .style("font-size", `${fontSize}px`)
-            .style("line-height", "34px");
-    
+          .append("tspan")
+          .attr("x", 0)
+          .attr("y", "-0.3em")
+          .text(nameParts[0])
+          .style("font-family", "Montserrat")
+          .style("font-weight", "700")
+          .style("font-size", `${fontSize}px`)
+          .style("line-height", "34px");
+
         // Add second line
         if (nameParts.length > 1) {
-            d3.select(this)
-            .append('tspan')
-            .attr('x', 0)
-            .attr('y', '1em')
-            .text(nameParts.slice(1).join(' '))
+          d3.select(this)
+            .append("tspan")
+            .attr("x", 0)
+            .attr("y", "1em")
+            .text(nameParts.slice(1).join(" "))
             .style("font-family", "Montserrat")
             .style("font-weight", "700")
             .style("font-size", `${fontSize}px`)
             .style("line-height", "34px");
         }
-    
+
         if (d.children) {
-            d3.select(this)
-                .append('tspan')
-                .attr('x', 0)
-                .attr('y', '4.3em')
-                .text(value + " Tools")
-                .style("font-family", "Nunito")
-                .style("font-weight", "700")
-                .style("font-size", `${fontSizeTools}px`)
-                .style("line-height", "18px")
-                .style("text-anchor", "middle")
+          d3.select(this)
+            .append("tspan")
+            .attr("x", 0)
+            .attr("y", "4.3em")
+            .text(value + " Tools")
+            .style("font-family", "Nunito")
+            .style("font-weight", "700")
+            .style("font-size", `${fontSizeTools}px`)
+            .style("line-height", "18px")
+            .style("text-anchor", "middle");
         }
-    });
+      });
 
     svg.on("click", (event) => {
       zoom(event, root);
