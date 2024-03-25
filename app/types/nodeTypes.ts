@@ -1,6 +1,7 @@
 export type NodeType = {
   name: string;
   value: number;
+  data: NodeType;
   __dataNode: DataNodeType;
   children?: NodeType[] | null;
 };

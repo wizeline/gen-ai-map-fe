@@ -32,7 +32,7 @@ const ModalInformation: FC<ModalInformationProps> = ({ node, onClose }) => {
     <div className="fixed top-4 right-4 w-96 h-auto max-h-[90vh] bg-secondary rounded-md p-2 gap-2 overflow-auto z-50">
       <div className="flex justify-between items-center mb-2">
         <h2 className="text-white border border-primary p-4 mr-2 w-full rounded-md">
-          {node?.name}
+          {node?.data?.name ?? node?.name}
         </h2>
         <div className="border border-primary rounded-md p-4">
           <IconButton className="!p-0" onClick={onClose}>
