@@ -53,11 +53,13 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
       .data(root.descendants().slice(1))
       .join("circle")
         .attr("fill", d => d.children ? color(d.depth) : "white")
+        .style("visibility", d => d.depth > 1 ? "hidden" : "visible")
         .attr("pointer-events", d => !d.children ? "none" : null)
         .on("mouseover", function() { d3.select(this).attr("stroke", "#000"); })
         .on("mouseout", function() { d3.select(this).attr("stroke", null); })
         .on("click", (event, d) =>{
             focus !== d && (zoom(event, d), event.stopPropagation());
+            d3.selectAll("circle").filter((dd: any) => dd.parent === d).style("visibility", "visible");
             onSelectNode && onSelectNode(["s", "dfsd"]);
         });
 
@@ -72,7 +74,7 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
         .style("display", d => d.parent === root ? "inline" : "none")
         .text((d: any) => d.data.name);
 
-    svg.on("click", (event) => zoom(event, root));
+        svg.on("click", (event) => zoom(event, root));
     let focus = root;
     let view: [number, number, number];
     zoomTo([focus.x, focus.y, focus.r * 2]);
