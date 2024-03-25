@@ -6,11 +6,14 @@ import * as d3 from "d3";
 import { NodeType } from "~/types";
 import { ZoomControl } from "../zoom/ZoomControl";
 import ModalInformation from "../information/ModalInformation";
+import { useScreenSize } from "~/context/ScreenSizeContext";
 
 interface BubbleChartProps {
   data: NodeType;
   onSelectNode?: (args: any) => void;
 }
+
+const colors = ["#E93D44", "#3B72A4", "#203449", "#751F22", "#E5C8A6", "#4D5D6D"];
 
 const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -18,7 +21,8 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
   const [zoomPercentage, setZoomPercentage] = useState(100);
   const [selectedNode, setSelectedNode] = useState<NodeType | null>(null);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
-  const colors = ["#E93D44", "#3B72A4", "#203449", "#751F22", "#E5C8A6", "#4D5D6D"];
+  const { isDesktop, isTablet } = useScreenSize();
+  const size = isDesktop ? 900 : isTablet ? 600 : 300;
 
   const handleIsInfoModalOpen = () => {
     setIsInfoModalOpen(true);
@@ -45,8 +49,8 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
 
     d3.select(svgRef.current).selectAll("*").remove();
 
-    const width = 900;
-    const height = 900;
+    const width = size;
+    const height = size;
 
     const color = d3
       .scaleLinear<string>()
@@ -55,7 +59,7 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
       .interpolate(d3.interpolateHcl);
 
     const pack = (data: any) =>
-      d3.pack().size([width, height]).padding(3)(
+    d3.pack().size([width, height]).padding(3)(
         d3
           .hierarchy(data)
           .sum((d: any) => d.value)
@@ -70,7 +74,7 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
       .attr("height", height)
       .attr(
         "style",
-        `position: absolute; top: -55; max-width: 100%; height: auto; display: block; margin: 0 -14px; background: transparent; cursor: pointer;`
+        `position: absolute; top: -40; max-width: 100%; height: auto; display: block; margin: 0 -14px; background: transparent; cursor: pointer;`
       );
 
     const node = svg
@@ -124,7 +128,48 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
       .style("fill", "#ffffff")
       .style("fill-opacity", (d) => (d.parent === root ? 1 : 0))
       .style("display", (d) => (d.parent === root ? "inline" : "none"))
-      .text((d: any) => d.data.name);
+    .each(function (d: any) {
+        const name = d.data.name;
+        const value = d.value;
+        const nameParts = name.split(' ');
+    
+        // Add first line
+        d3.select(this)
+            .append('tspan')
+            .attr('x', 0)
+            .attr('y', '-0.3em')
+            .text(nameParts[0])
+            .style("font-family", "Montserrat")
+            .style("font-weight", "700")
+            .style("font-size", "22px")
+            .style("line-height", "34px");
+    
+        // Add second line
+        if (nameParts.length > 1) {
+            d3.select(this)
+            .append('tspan')
+            .attr('x', 0)
+            .attr('y', '1em')
+            .text(nameParts.slice(1).join(' '))
+            .style("font-family", "Montserrat")
+            .style("font-weight", "700")
+            .style("font-size", "22px")
+            .style("line-height", "34px");
+        }
+    
+        if (d.children) {
+            d3.select(this)
+                .append('tspan')
+                .attr('x', 0)
+                .attr('y', '4.3em')
+                .text(value + " Tools")
+                .style("font-family", "Nunito")
+                .style("font-weight", "700")
+                .style("font-size", "12px")
+                .style("line-height", "18px")
+                .style("text-anchor", "middle")
+        }
+    });
 
     svg.on("click", (event) => {
       zoom(event, root);
@@ -178,7 +223,7 @@ const BubbleChart: FC<BubbleChartProps> = ({ data, onSelectNode }) => {
         });
     }
     setIsSVGRendered(true);
-  }, [data, isSVGRendered, onSelectNode, selectedNode]);
+  }, [data, isSVGRendered, onSelectNode, selectedNode, size]);
 
   return (
     <>
