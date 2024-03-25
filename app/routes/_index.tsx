@@ -1,11 +1,11 @@
 import type { MetaFunction } from "@remix-run/node";
 import { useEffect, useState } from "react";
 import { Breadcrumb } from "~/components/breadcrumb/Breadcrumb";
-import SunburstChart from "~/components/charts/SunburstChart";
+import BubbleChart from "~/components/charts/BubbleChart";
+//import SunburstChart from "~/components/charts/SunburstChart";
 import HeaderIcon from "~/components/icons/HeaderIcon";
 import { Loader } from "~/components/loader/Loader";
 import { TopNavigation } from "~/components/navigation/TopNavigation";
-import { ZoomControl } from "~/components/zoom/ZoomControl";
 import { NotificationType } from "~/types";
 
 export const meta: MetaFunction = () => {
@@ -30,12 +30,7 @@ export default function Index() {
 
       return notificationDate >= today;
     });
-  const [zoomPercentage, setZoomPercentage] = useState(100);
   const [nodeAncestors, setNodeAncestors] = useState<string[]>([]);
-
-  const handleZoomChange = (newZoomPercentage: number) => {
-    setZoomPercentage(newZoomPercentage);
-  };
 
   useEffect(() => {
     fetch("https://gen-ai-tools-public.s3.amazonaws.com/map-tree.json")
@@ -70,16 +65,11 @@ export default function Index() {
           notifications={notifications}
         />
       </div>
-      {!jsonData ? <Loader /> : <div className="min-h-screen flex flex-col justify-between items-center"><SunburstChart data={jsonData} onSelectNode={setNodeAncestors} /></div>}
+      {/*!jsonData ? <Loader /> : <div className="min-h-screen flex flex-col justify-between items-center"><SunburstChart data={jsonData} onSelectNode={setNodeAncestors} /></div>*/}
+      {!jsonData ? <Loader /> : <div className="min-h-screen flex flex-col justify-between items-center"><BubbleChart data={jsonData} onSelectNode={setNodeAncestors} /></div>}
       <div className="hidden sm:block absolute bottom-0 left-0 mb-4 ml-4">
         <Breadcrumb
           path={nodeAncestors}
-        />
-      </div>
-      <div className="hidden sm:block absolute bottom-0 right-0 mb-4 mr-4">
-        <ZoomControl
-          zoomPercentage={zoomPercentage}
-          onZoomChange={handleZoomChange}
         />
       </div>
     </div>
