@@ -5,6 +5,10 @@ import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined
 import { Badge, IconButton } from "@mui/material";
 import { ModalUpdates } from "../updates/ModalUpdates";
 import { NotificationType } from "~/types";
+import {
+  helpButtonFeatureFlag,
+  newsButtonFeatureFlag,
+} from "~/utils/featureFlags";
 
 interface Props {
   newNotifications: boolean;
@@ -35,27 +39,31 @@ export const TopNavigation: React.FC<Props> = ({
 
   return (
     <>
-      <div className="flex justify-between items-center border border-top-nav-border rounded w-28 h-9 p-2 bg-primary">
-        <IconButton className="!p-0" onClick={() => {}}>
-          <HelpOutlineOutlinedIcon className="w-5 h-5 !fill-white cursor-pointer" />
-        </IconButton>
+      <div className="flex justify-between items-center border border-top-nav-border rounded w-auto h-9 p-2 gap-4 bg-primary">
+        {helpButtonFeatureFlag && (
+          <IconButton className="!p-0" onClick={() => {}}>
+            <HelpOutlineOutlinedIcon className="w-5 h-5 !fill-white cursor-pointer" />
+          </IconButton>
+        )}
         <IconButton className="!p-0" onClick={() => {}}>
           <ShareOutlinedIcon className="w-5 h-5 !fill-white cursor-pointer" />
         </IconButton>
-        <IconButton className="!p-0" onClick={handleOnClick}>
-          {!newNotifications ? (
-            <NotificationsOutlinedIcon className="w-5 h-5 !fill-white cursor-pointer" />
-          ) : (
-            <Badge
-              overlap="circular"
-              variant="dot"
-              color="error"
-              invisible={!newNotifications}
-            >
+        {newsButtonFeatureFlag && (
+          <IconButton className="!p-0" onClick={handleOnClick}>
+            {!newNotifications ? (
               <NotificationsOutlinedIcon className="w-5 h-5 !fill-white cursor-pointer" />
-            </Badge>
-          )}
-        </IconButton>
+            ) : (
+              <Badge
+                overlap="circular"
+                variant="dot"
+                color="error"
+                invisible={!newNotifications}
+              >
+                <NotificationsOutlinedIcon className="w-5 h-5 !fill-white cursor-pointer" />
+              </Badge>
+            )}
+          </IconButton>
+        )}
       </div>
       {isModalOpen && (
         <ModalUpdates

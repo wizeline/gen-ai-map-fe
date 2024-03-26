@@ -48,7 +48,7 @@ const ModalInformation: FC<ModalInformationProps> = ({
         className={`fixed top-4 right-4 w-96 h-auto max-h-[90vh] bg-secondary rounded-md p-2 gap-2 overflow-auto !z-40 ${className}`}
       >
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-white border border-primary p-4 mr-2 w-full rounded-md">
+          <h2 className="text-white border border-primary p-4 mr-2 w-full rounded-md truncate">
             {product?.name}
           </h2>
           <div className="border border-primary rounded-md p-4">
@@ -59,7 +59,7 @@ const ModalInformation: FC<ModalInformationProps> = ({
         </div>
         <a href={product?.link} target="_blank" rel="noreferrer">
           <div className="border border-primary rounded-md p-2 mb-2 flex justify-between p-4 items-center">
-            <p className="text-blue500 font-montserrat font-medium text-sm leading-[18px]">
+            <p className="text-blue500 font-montserrat font-medium text-sm leading-[18px] truncate">
               {cleanProductLink(product?.link)}
             </p>
             <OpenInNew className="!fill-primary" />
