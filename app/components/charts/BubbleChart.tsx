@@ -66,7 +66,7 @@ const BubbleChart: FC<BubbleChartProps> = ({
       .attr("height", height)
       .attr(
         "style",
-        `position: absolute; top: -40; max-width: 100%; height: auto; display: block; margin: 0 -14px; background: transparent; cursor: pointer;`
+        `position: absolute;${isDesktop ? " top: -40;" : ""} max-width: 100%; height: auto; display: block; margin: 0 -14px; background: transparent; cursor: pointer;`
       );
 
     const node = svg

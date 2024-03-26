@@ -12,6 +12,7 @@ import ViewSwitcher, { ViewType } from "~/components/navigation/ViewSwitcher";
 import AIProductTable from "~/components/tables/AIProductTable";
 import { ZoomControl } from "~/components/zoom/ZoomControl";
 import { ModalContext } from "~/context/ModalContext";
+import { useScreenSize } from "~/context/ScreenSizeContext";
 import { NotificationType } from "~/types";
 import { zoomFeatureFlag } from "~/utils/featureFlags";
 
@@ -33,6 +34,7 @@ export default function Index() {
   const [nodeAncestors, setNodeAncestors] = useState<string[]>([]);
   const [zoomPercentage, setZoomPercentage] = useState(100);
   const [productName, setProductName] = useState("");
+  const { isDesktop } = useScreenSize();
 
   const handleIsInfoModalClose = () => {
     setProductName("");
@@ -114,7 +116,7 @@ export default function Index() {
         {!jsonData || !jsonModalData ? (
           <Loader />
         ) : (
-          <div className="min-h-screen mx-36 flex flex-col justify-between items-center relative overflow-x-hidden z-10">
+          <div className={`${isDesktop ? "min-h-screen mx-36 flex flex-col justify-between items-center relative overflow-x-hidden z-10" : ""}`}>
             <div
               className={`absolute w-full h-full transition-all duration-500 ease-in-out transform ${
                 currentView === ViewType.BubbleChart
@@ -122,7 +124,7 @@ export default function Index() {
                   : "-translate-x-full"
               }`}
             >
-              <div className="min-h-screen flex flex-col justify-between items-center">
+              <div className={`min-h-screen flex flex-col ${isDesktop ? "justify-between" : "justify-around"} items-center`}>
                 {/* Use this if you want to display the Sunburst chart instead of the Bubble chart */}
                 {/*<SunburstChart
                   data={jsonData}
@@ -137,7 +139,7 @@ export default function Index() {
                 />
               </div>
             </div>
-            <div
+            {isDesktop && <div
               className={`absolute w-full h-full transition-all duration-500 ease-in-out transform ${
                 currentView === ViewType.BubbleChart
                   ? "translate-x-full"
@@ -150,7 +152,7 @@ export default function Index() {
                   onViewDetails={setProductName}
                 />
               </div>
-            </div>
+            </div>}
           </div>
         )}
         {currentView === ViewType.BubbleChart && (

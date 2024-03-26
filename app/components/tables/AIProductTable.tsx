@@ -158,7 +158,7 @@ const AIProductTable: FC<AIProductTableProps> = ({
         </Select>
       </div>
       <div className="mt-6">
-        <div className="w-[900px] h-[700px] border border-top-nav-border rounded overflow-auto !text-white mt-6 items-center">
+        <div className="w-auto h-[700px] border border-top-nav-border rounded overflow-auto !text-white mt-6 items-center">
           <TableContainer className="max-h-[700px]">
             <Table stickyHeader>
               <TableHead>
