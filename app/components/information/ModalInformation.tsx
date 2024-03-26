@@ -57,14 +57,14 @@ const ModalInformation: FC<ModalInformationProps> = ({
             </IconButton>
           </div>
         </div>
-        <a href={product?.link} target="_blank" rel="noreferrer">
+        {product?.link && <a href={product?.link} target="_blank" rel="noreferrer">
           <div className="border border-primary rounded-md p-2 mb-2 flex justify-between p-4 items-center">
             <p className="text-blue500 font-montserrat font-medium text-sm leading-[18px] truncate">
               {cleanProductLink(product?.link)}
             </p>
             <OpenInNew className="!fill-primary" />
           </div>
-        </a>
+        </a>}
         <div className="border border-primary rounded-md p-4 mb-2 grid grid-cols-2 gap-4">
           {product?.name?.length > 0 && (
             <div>
