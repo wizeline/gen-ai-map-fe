@@ -7,6 +7,7 @@ import {
 } from "@remix-run/react";
 import "./tailwind.css";
 import { ScreenSizeProvider } from "./context/ScreenSizeContext";
+import { ModalProvider } from "./context/ModalContext";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -20,7 +21,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <ScreenSizeProvider>
-          {children}
+          <ModalProvider>{children}</ModalProvider>
         </ScreenSizeProvider>
         <ScrollRestoration />
         <Scripts />

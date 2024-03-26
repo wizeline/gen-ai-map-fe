@@ -1,13 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { MetaFunction } from "@remix-run/node";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { Breadcrumb } from "~/components/breadcrumb/Breadcrumb";
 import BubbleChart from "~/components/charts/BubbleChart";
 //import SunburstChart from "~/components/charts/SunburstChart";
 import HeaderIcon from "~/components/icons/HeaderIcon";
+import ModalInformation from "~/components/information/ModalInformation";
 import { Loader } from "~/components/loader/Loader";
 import { TopNavigation } from "~/components/navigation/TopNavigation";
 import ViewSwitcher, { ViewType } from "~/components/navigation/ViewSwitcher";
 import AIProductTable from "~/components/tables/AIProductTable";
+import { ZoomControl } from "~/components/zoom/ZoomControl";
+import { ModalContext } from "~/context/ModalContext";
 import { NotificationType } from "~/types";
 
 export const meta: MetaFunction = () => {
@@ -21,9 +25,29 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Index() {
+  const { isModalOpen, openModal, closeModal } = useContext(ModalContext);
   const [jsonData, setJsonData] = useState(null);
   const [jsonModalData, setJsonModalData] = useState(null);
   const [notifications, setNotifications] = useState<NotificationType[]>([]);
+  const [nodeAncestors, setNodeAncestors] = useState<string[]>([]);
+  const [zoomPercentage, setZoomPercentage] = useState(100);
+  const [productName, setProductName] = useState("");
+
+  const handleIsInfoModalClose = () => {
+    setProductName("");
+    closeModal();
+  };
+
+  useEffect(() => {
+    if (productName.length > 0) {
+      openModal();
+    }
+  }, [openModal, productName]);
+
+  const handleZoomChange = (newZoomPercentage: number) => {
+    setZoomPercentage(newZoomPercentage);
+  };
+
   const newNotifications =
     notifications.length > 0 &&
     notifications.some((notification) => {
@@ -65,48 +89,84 @@ export default function Index() {
     ]);
   }, []);
 
+  const handleOnSwitch = (view: ViewType) => {
+    setCurrentView(view);
+    setProductName("");
+    closeModal();
+  };
+
   return (
-    <div className="min-h-screen flex flex-col justify-between relative">
-      <div className="absolute left-0 top-0 sm:ml-auto sm:mr-auto sm:left-0 sm:right-0">
-        <HeaderIcon className="ml-4 mt-4" />
-      </div>
-      <div className="hidden sm:block absolute right-0 top-0 mt-4 mr-4 z-40">
-        <ViewSwitcher onSwitch={setCurrentView} />
-      </div>
-      <div className="hidden sm:block absolute right-0 top-0 mt-4 mr-4">
-        <TopNavigation
-          newNotifications={newNotifications}
-          notifications={notifications}
-        />
-      </div>
-      {!jsonData || !jsonModalData ? (
-        <Loader />
-      ) : (
-        <div className="min-h-screen mx-36 flex flex-col justify-between items-center relative overflow-x-hidden z-10">
-          <div
-            className={`absolute w-full h-full transition-all duration-500 ease-in-out transform ${
-              currentView === ViewType.BubbleChart
-                ? "translate-x-0"
-                : "-translate-x-full"
-            }`}
-          >
-            <div className="min-h-screen flex flex-col justify-between items-center">
-              <BubbleChart data={jsonData} modalData={jsonModalData} />
-            </div>
-          </div>
-          <div
-            className={`absolute w-full h-full transition-all duration-500 ease-in-out transform ${
-              currentView === ViewType.BubbleChart
-                ? "translate-x-full"
-                : "translate-x-0"
-            }`}
-          >
-            <div className="min-h-screen flex flex-col items-center">
-              <AIProductTable products={jsonModalData} />
-            </div>
-          </div>
+    <>
+      <div className="min-h-screen flex flex-col justify-between relative">
+        <div className="absolute left-0 top-0 sm:ml-auto sm:mr-auto sm:left-0 sm:right-0">
+          <HeaderIcon className="ml-4 mt-4" />
         </div>
+        <div className="hidden sm:block absolute right-0 top-0 mt-4 mr-4 z-40">
+          <ViewSwitcher onSwitch={handleOnSwitch} />
+        </div>
+        <div className="hidden sm:block absolute right-0 top-0 mt-4 mr-4">
+          <TopNavigation
+            newNotifications={newNotifications}
+            notifications={notifications}
+          />
+        </div>
+        {!jsonData || !jsonModalData ? (
+          <Loader />
+        ) : (
+          <div className="min-h-screen mx-36 flex flex-col justify-between items-center relative overflow-x-hidden z-10">
+            <div
+              className={`absolute w-full h-full transition-all duration-500 ease-in-out transform ${
+                currentView === ViewType.BubbleChart
+                  ? "translate-x-0"
+                  : "-translate-x-full"
+              }`}
+            >
+              <div className="min-h-screen flex flex-col justify-between items-center">
+                <BubbleChart
+                  data={jsonData}
+                  onSelectNode={setProductName}
+                  onSelectNodePath={setNodeAncestors}
+                  onZoom={handleZoomChange}
+                />
+              </div>
+            </div>
+            <div
+              className={`absolute w-full h-full transition-all duration-500 ease-in-out transform ${
+                currentView === ViewType.BubbleChart
+                  ? "translate-x-full"
+                  : "translate-x-0"
+              }`}
+            >
+              <div className="min-h-screen flex flex-col items-center">
+                <AIProductTable
+                  products={jsonModalData}
+                  onViewDetails={setProductName}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+        {currentView === ViewType.BubbleChart && (
+          <div className="hidden sm:block absolute bottom-0 left-0 mb-4 ml-4 !z-40">
+            <Breadcrumb path={nodeAncestors} />
+          </div>
+        )}
+        {currentView === ViewType.BubbleChart && (
+          <div className="hidden sm:block absolute bottom-0 right-0 mb-4 mr-4 !z-40">
+            <ZoomControl
+              zoomPercentage={zoomPercentage}
+              onZoomChange={handleZoomChange}
+            />
+          </div>
+        )}
+      </div>
+      {isModalOpen && productName.length > 0 && (
+        <ModalInformation
+          onClose={handleIsInfoModalClose}
+          nodeName={productName}
+          modalData={jsonModalData}
+        />
       )}
-    </div>
+    </>
   );
 }

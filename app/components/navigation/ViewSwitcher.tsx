@@ -33,7 +33,7 @@ const ViewSwitcher: FC<ViewSwitcherProps> = ({ onSwitch }) => {
   };
 
   return (
-    <div className="flex justify-between items-center border border-top-nav-border rounded w-28 h-9 p-2 bg-primary z-[9999] fixed right-1/2 transform translate-x-1/2">
+    <div className="flex justify-between items-center border border-top-nav-border rounded w-28 h-9 p-2 bg-primary fixed right-1/2 transform translate-x-1/2">
       <IconButton className="!p-0" onClick={handleChartClick}>
         <BubbleChart
           className={`w-5 h-5 cursor-pointer ${
