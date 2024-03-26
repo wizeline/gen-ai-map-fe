@@ -2,7 +2,7 @@
 import { FC, useState } from "react";
 import { IconButton } from "@mui/material";
 import TableChartIcon from "@mui/icons-material/TableChart";
-import ShowChartIcon from "@mui/icons-material/ShowChart";
+import { BubbleChart } from "@mui/icons-material";
 
 export enum ViewType {
   Table,
@@ -10,11 +10,13 @@ export enum ViewType {
 }
 
 interface ViewSwitcherProps {
-    onSwitch?: (args?: any) => void;
+  onSwitch?: (args?: any) => void;
 }
 
 const ViewSwitcher: FC<ViewSwitcherProps> = ({ onSwitch }) => {
-  const [currentView, setCurrentView] = useState<ViewType>(ViewType.BubbleChart);
+  const [currentView, setCurrentView] = useState<ViewType>(
+    ViewType.BubbleChart
+  );
 
   const handleTableClick = () => {
     setCurrentView(ViewType.Table);
@@ -33,10 +35,20 @@ const ViewSwitcher: FC<ViewSwitcherProps> = ({ onSwitch }) => {
   return (
     <div className="flex justify-between items-center border border-top-nav-border rounded w-28 h-9 p-2 bg-primary z-[9999] fixed right-1/2 transform translate-x-1/2">
       <IconButton className="!p-0" onClick={handleChartClick}>
-        <ShowChartIcon className={`w-5 h-5 cursor-pointer ${currentView === ViewType.BubbleChart ? "!fill-white" : "!fill-gray-500"}`} />
+        <BubbleChart
+          className={`w-5 h-5 cursor-pointer ${
+            currentView === ViewType.BubbleChart
+              ? "!fill-white"
+              : "!fill-gray-500"
+          }`}
+        />
       </IconButton>
       <IconButton className="!p-0" onClick={handleTableClick}>
-        <TableChartIcon className={`w-5 h-5 cursor-pointer ${currentView === ViewType.Table ? "!fill-white" : "!fill-gray-500"}`} />
+        <TableChartIcon
+          className={`w-5 h-5 cursor-pointer ${
+            currentView === ViewType.Table ? "!fill-white" : "!fill-gray-500"
+          }`}
+        />
       </IconButton>
     </div>
   );
