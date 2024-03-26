@@ -6,6 +6,7 @@ import HeaderIcon from "~/components/icons/HeaderIcon";
 import { Loader } from "~/components/loader/Loader";
 import { TopNavigation } from "~/components/navigation/TopNavigation";
 import ViewSwitcher, { ViewType } from "~/components/navigation/ViewSwitcher";
+import AIProductTable from "~/components/tables/AIProductTable";
 import { NotificationType } from "~/types";
 
 export const meta: MetaFunction = () => {
@@ -89,8 +90,8 @@ export default function Index() {
             </div>
           </div>
           <div className={`absolute w-full h-full transition-all duration-500 ease-in-out transform ${currentView === ViewType.BubbleChart ? 'translate-x-full' : 'translate-x-0'}`}>
-            <div className="min-h-screen flex flex-col justify-between items-center">
-              
+            <div className="min-h-screen flex flex-col items-center">
+              <AIProductTable products={jsonModalData} />
             </div>
           </div>
         </div>
