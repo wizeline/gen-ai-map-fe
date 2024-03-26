@@ -3,25 +3,30 @@ import { OpenInNew } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import { IconButton } from "@mui/material";
 import { FC } from "react";
-import { AIProducts, NodeType } from "~/types";
+import { AIProducts } from "~/types";
 import Pill from "../common/Pill";
 
 interface ModalInformationProps {
-  node: NodeType | null;
-  modalData: AIProducts;
+  nodeName: string;
+  modalData: AIProducts | null;
   onClose: () => void;
+  className?: string;
 }
 
 const ModalInformation: FC<ModalInformationProps> = ({
-  node,
+  nodeName,
   modalData,
   onClose,
+  className,
 }) => {
-  const name = node?.data?.name ?? node?.name;
-  const product = modalData.find((product) => product.name === name);
+  const name = nodeName;
+  const product =
+    modalData && modalData.find((product) => product.name === name);
   const relatedTools = modalData
-    ?.filter((p) => p.name !== name && p.ecosystem === product?.ecosystem)
-    .map((p) => p.name);
+    ? modalData
+        ?.filter((p) => p.name !== name && p.ecosystem === product?.ecosystem)
+        .map((p) => p.name)
+    : [];
   // TODO - Replace information with actual data from the node
   const bestFeatures: any[] = [];
   // TODO - Replace information with actual data from the node
@@ -39,7 +44,9 @@ const ModalInformation: FC<ModalInformationProps> = ({
 
   return (
     product && (
-      <div className="fixed top-4 right-4 w-96 h-auto max-h-[90vh] bg-secondary rounded-md p-2 gap-2 overflow-auto z-50">
+      <div
+        className={`fixed top-4 right-4 w-96 h-auto max-h-[90vh] bg-secondary rounded-md p-2 gap-2 overflow-auto !z-40 ${className}`}
+      >
         <div className="flex justify-between items-center mb-2">
           <h2 className="text-white border border-primary p-4 mr-2 w-full rounded-md">
             {product?.name}

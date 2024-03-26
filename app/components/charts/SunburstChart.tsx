@@ -130,8 +130,8 @@ const SunburstChart = (props: SunburstElementProps) => {
       {isInfoModalOpen && selectedNode && !selectedNode?.children && (
         <ModalInformation
           onClose={handleIsInfoModalClose}
-          node={selectedNode}
-          modalData={{}}
+          nodeName={selectedNode?.name}
+          modalData={[]}
         />
       )}
     </>

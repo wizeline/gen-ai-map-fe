@@ -1,17 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unexpected-multiline */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FC, useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import { NodeType } from "~/types";
-import { ZoomControl } from "../zoom/ZoomControl";
-import ModalInformation from "../information/ModalInformation";
 import { useScreenSize } from "~/context/ScreenSizeContext";
 
 interface BubbleChartProps {
   data: NodeType;
-  modalData: any;
+  onSelectNodePath?: (args: any) => void;
   onSelectNode?: (args: any) => void;
+  onZoom?: (args: any) => void;
 }
 
 const colors = [
@@ -22,44 +20,21 @@ const colors = [
   "#E5C8A6",
   "#4D5D6D",
 ];
-const minNodeRadius = 100;
 
 const BubbleChart: FC<BubbleChartProps> = ({
   data,
-  modalData,
+  onSelectNodePath,
   onSelectNode,
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [isSVGRendered, setIsSVGRendered] = useState(false);
-  const [zoomPercentage, setZoomPercentage] = useState(100);
   const [selectedNode, setSelectedNode] = useState<NodeType | null>(null);
-  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const { isDesktop, isTablet } = useScreenSize();
   const size = isDesktop ? 900 : isTablet ? 600 : 300;
   const domainMinValue = 0;
   const domainMaxValue = 5;
   const minFontSize = 1;
   const maxFontSize = 22;
-
-  const handleIsInfoModalOpen = () => {
-    setIsInfoModalOpen(true);
-  };
-
-  const handleIsInfoModalClose = () => {
-    setSelectedNode(null);
-    setIsInfoModalOpen(false);
-  };
-
-  const handleZoomChange = (newZoomPercentage: number) => {
-    setZoomPercentage(newZoomPercentage);
-    // TODO: Add here the zoom handler for the chart
-  };
-
-  useEffect(() => {
-    if (selectedNode) {
-      handleIsInfoModalOpen();
-    }
-  }, [selectedNode]);
 
   useEffect(() => {
     if (!svgRef.current || isSVGRendered) return;
@@ -117,10 +92,11 @@ const BubbleChart: FC<BubbleChartProps> = ({
           setSelectedNode(null);
           focus !== d && (zoom(event, d), event.stopPropagation());
           d3.selectAll("circle")
-            .filter((dd: any) => dd.parent === d)
+            .filter((dd: any) => dd?.parent === d)
             .style("visibility", "visible");
         } else {
           setSelectedNode(d as any);
+          onSelectNode && onSelectNode((d?.data as any)?.name ?? "");
           event.stopPropagation();
         }
 
@@ -131,7 +107,7 @@ const BubbleChart: FC<BubbleChartProps> = ({
           currentNode = currentNode.parent;
         }
 
-        onSelectNode && onSelectNode(nodePath);
+        onSelectNodePath && onSelectNodePath(nodePath);
       });
 
     const label = svg
@@ -225,6 +201,7 @@ const BubbleChart: FC<BubbleChartProps> = ({
     function zoom(event: d3.D3ZoomEvent<SVGSVGElement, unknown>, d: any) {
       if (selectedNode !== null || !d.children) return;
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const focus0 = focus;
 
       focus = d;
@@ -232,6 +209,7 @@ const BubbleChart: FC<BubbleChartProps> = ({
       const transition = svg
         .transition()
         .duration((event as any).altKey ? 7500 : 750)
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         .tween("zoom", (d) => {
           const i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2]);
           return (t) => zoomTo(i(t));
@@ -251,26 +229,9 @@ const BubbleChart: FC<BubbleChartProps> = ({
         });
     }
     setIsSVGRendered(true);
-  }, [data, isSVGRendered, onSelectNode, selectedNode, size]);
+  }, [data, isSVGRendered, onSelectNode, onSelectNodePath, selectedNode, size]);
 
-  return (
-    <>
-      <svg ref={svgRef}></svg>
-      {isInfoModalOpen && selectedNode && !selectedNode?.children && (
-        <ModalInformation
-          onClose={handleIsInfoModalClose}
-          node={selectedNode}
-          modalData={modalData}
-        />
-      )}
-      <div className="hidden sm:block absolute bottom-0 right-0 mb-4 mr-4">
-        <ZoomControl
-          zoomPercentage={zoomPercentage}
-          onZoomChange={handleZoomChange}
-        />
-      </div>
-    </>
-  );
+  return <svg ref={svgRef}></svg>;
 };
 
 export default BubbleChart;
