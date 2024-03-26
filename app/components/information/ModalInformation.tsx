@@ -10,12 +10,14 @@ interface ModalInformationProps {
   nodeName: string;
   modalData: AIProducts;
   onClose: () => void;
+  className?: string;
 }
 
 const ModalInformation: FC<ModalInformationProps> = ({
   nodeName,
   modalData,
   onClose,
+  className,
 }) => {
   const name = nodeName;
   const product = modalData.find((product) => product.name === name);
@@ -39,7 +41,7 @@ const ModalInformation: FC<ModalInformationProps> = ({
 
   return (
     product && (
-      <div className="fixed top-4 right-4 w-96 h-auto max-h-[90vh] bg-secondary rounded-md p-2 gap-2 overflow-auto z-50">
+      <div className={`fixed top-4 right-4 w-96 h-auto max-h-[90vh] bg-secondary rounded-md p-2 gap-2 overflow-auto !z-40 ${className}`}>
         <div className="flex justify-between items-center mb-2">
           <h2 className="text-white border border-primary p-4 mr-2 w-full rounded-md">
             {product?.name}

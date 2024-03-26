@@ -13,13 +13,16 @@ import {
   InputLabel,
 } from "@mui/material";
 import { Visibility } from "@mui/icons-material";
-import { AIProducts } from "~/types";
+import { AIProduct, AIProducts } from "~/types";
+import ModalInformation from "../information/ModalInformation";
 
 interface AIProductTableProps {
   products: AIProducts;
 }
 
 const AIProductTable: FC<AIProductTableProps> = ({ products }) => {
+  const [selectedProduct, setSelectedProduct] = useState<AIProduct | null>(null);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [filters, setFilters] = useState({
     licence: "All",
     ecosystem: "All",
@@ -75,6 +78,16 @@ const AIProductTable: FC<AIProductTableProps> = ({ products }) => {
       )
     )
   );
+
+  const handleIsInfoOpenModal = (product: AIProduct) => {
+    setSelectedProduct(product);
+    setIsInfoModalOpen(true);
+  }
+
+  const handleIsInfoModalClose = () => {
+    setSelectedProduct(null);
+    setIsInfoModalOpen(false);
+  }
 
   return (
     <>
@@ -154,8 +167,8 @@ const AIProductTable: FC<AIProductTableProps> = ({ products }) => {
             <Table>
               <TableHead>
                 <TableRow className="bg-primary font-montserrat">
-                  <TableCell className="!text-white-alt">Category</TableCell>
                   <TableCell className="!text-white-alt">Name</TableCell>
+                  <TableCell className="!text-white-alt">Category</TableCell>
                   <TableCell className="!text-white-alt">Ecosystem</TableCell>
                   <TableCell className="!text-white-alt">License</TableCell>
                   <TableCell className="!text-white-alt">Details</TableCell>
@@ -167,11 +180,11 @@ const AIProductTable: FC<AIProductTableProps> = ({ products }) => {
                     key={product.id}
                     className="bg-secondary font-nunito"
                   >
+                    <TableCell className="!text-white-alt">
+                        {product.name}
+                    </TableCell>
                     <TableCell className="!text-white-alt max-w-[350px]">
                       {product.category.join(", ")}
-                    </TableCell>
-                    <TableCell className="!text-white-alt">
-                      {product.name}
                     </TableCell>
                     <TableCell className="!text-white-alt">
                       {product.ecosystem}
@@ -180,7 +193,7 @@ const AIProductTable: FC<AIProductTableProps> = ({ products }) => {
                       {product.licence}
                     </TableCell>
                     <TableCell className="!text-center">
-                      <IconButton className="!p-0">
+                      <IconButton className="!p-0" onClick={() => handleIsInfoOpenModal(product)}>
                         <Visibility className="!fill-white-alt" />
                       </IconButton>
                     </TableCell>
@@ -191,6 +204,14 @@ const AIProductTable: FC<AIProductTableProps> = ({ products }) => {
           </TableContainer>
         </div>
       </div>
+      {isInfoModalOpen && selectedProduct && (
+        <ModalInformation
+          onClose={handleIsInfoModalClose}
+          nodeName={selectedProduct.name}
+          modalData={products}
+          className="max-h-[95vh]"
+        />
+      )}
     </>
   );
 };

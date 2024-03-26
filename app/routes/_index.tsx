@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { MetaFunction } from "@remix-run/node";
 import { useEffect, useState } from "react";
 import BubbleChart from "~/components/charts/BubbleChart";
@@ -32,7 +33,9 @@ export default function Index() {
 
       return notificationDate >= today;
     });
-  const [currentView, setCurrentView] = useState<ViewType>(ViewType.BubbleChart);
+  const [currentView, setCurrentView] = useState<ViewType>(
+    ViewType.BubbleChart
+  );
 
   useEffect(() => {
     fetch("https://gen-ai-tools-public.s3.amazonaws.com/map-tree.json")
@@ -67,8 +70,8 @@ export default function Index() {
       <div className="absolute left-0 top-0 sm:ml-auto sm:mr-auto sm:left-0 sm:right-0">
         <HeaderIcon className="ml-4 mt-4" />
       </div>
-      <div className="hidden sm:block absolute right-0 top-0 mt-4 mr-4">
-        <ViewSwitcher onSwitch={setCurrentView}/>
+      <div className="hidden sm:block absolute right-0 top-0 mt-4 mr-4 z-40">
+        <ViewSwitcher onSwitch={setCurrentView} />
       </div>
       <div className="hidden sm:block absolute right-0 top-0 mt-4 mr-4">
         <TopNavigation
@@ -76,20 +79,28 @@ export default function Index() {
           notifications={notifications}
         />
       </div>
-      {/*!jsonData ? <Loader /> : <div className="min-h-screen flex flex-col justify-between items-center"><SunburstChart data={jsonData} onSelectNode={setNodeAncestors} /></div>*/}
-      {(!jsonData || !jsonModalData) ? (
+      {!jsonData || !jsonModalData ? (
         <Loader />
       ) : (
-        <div className="min-h-screen flex flex-col justify-between items-center relative overflow-x-hidden">
-          <div className={`absolute w-full h-full transition-all duration-500 ease-in-out transform ${currentView === ViewType.BubbleChart ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="min-h-screen mx-36 flex flex-col justify-between items-center relative overflow-x-hidden z-10">
+          <div
+            className={`absolute w-full h-full transition-all duration-500 ease-in-out transform ${
+              currentView === ViewType.BubbleChart
+                ? "translate-x-0"
+                : "-translate-x-full"
+            }`}
+          >
             <div className="min-h-screen flex flex-col justify-between items-center">
-              <BubbleChart
-                data={jsonData}
-                modalData={jsonModalData}
-              />
+              <BubbleChart data={jsonData} modalData={jsonModalData} />
             </div>
           </div>
-          <div className={`absolute w-full h-full transition-all duration-500 ease-in-out transform ${currentView === ViewType.BubbleChart ? 'translate-x-full' : 'translate-x-0'}`}>
+          <div
+            className={`absolute w-full h-full transition-all duration-500 ease-in-out transform ${
+              currentView === ViewType.BubbleChart
+                ? "translate-x-full"
+                : "translate-x-0"
+            }`}
+          >
             <div className="min-h-screen flex flex-col items-center">
               <AIProductTable products={jsonModalData} />
             </div>
