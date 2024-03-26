@@ -1,6 +1,5 @@
 import type { MetaFunction } from "@remix-run/node";
 import { useEffect, useState } from "react";
-import { Breadcrumb } from "~/components/breadcrumb/Breadcrumb";
 import BubbleChart from "~/components/charts/BubbleChart";
 //import SunburstChart from "~/components/charts/SunburstChart";
 import HeaderIcon from "~/components/icons/HeaderIcon";
@@ -31,7 +30,6 @@ export default function Index() {
 
       return notificationDate >= today;
     });
-  const [nodeAncestors, setNodeAncestors] = useState<string[]>([]);
 
   useEffect(() => {
     fetch("https://gen-ai-tools-public.s3.amazonaws.com/map-tree.json")
@@ -80,13 +78,9 @@ export default function Index() {
           <BubbleChart
             data={jsonData}
             modalData={jsonModalData}
-            onSelectNode={setNodeAncestors}
           />
         </div>
       )}
-      <div className="hidden sm:block absolute bottom-0 left-0 mb-4 ml-4">
-        <Breadcrumb path={nodeAncestors} />
-      </div>
     </div>
   );
 }

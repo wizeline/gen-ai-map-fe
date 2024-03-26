@@ -7,6 +7,7 @@ import { NodeType } from "~/types";
 import { ZoomControl } from "../zoom/ZoomControl";
 import ModalInformation from "../information/ModalInformation";
 import { useScreenSize } from "~/context/ScreenSizeContext";
+import { Breadcrumb } from "../breadcrumb/Breadcrumb";
 
 interface BubbleChartProps {
   data: NodeType;
@@ -40,6 +41,7 @@ const BubbleChart: FC<BubbleChartProps> = ({
   const domainMaxValue = 5;
   const minFontSize = 1;
   const maxFontSize = 22;
+  const [nodeAncestors, setNodeAncestors] = useState<string[]>([]);
 
   const handleIsInfoModalOpen = () => {
     setIsInfoModalOpen(true);
@@ -132,6 +134,7 @@ const BubbleChart: FC<BubbleChartProps> = ({
         }
 
         onSelectNode && onSelectNode(nodePath);
+        setNodeAncestors(nodePath);
       });
 
     const label = svg
@@ -259,10 +262,14 @@ const BubbleChart: FC<BubbleChartProps> = ({
       {isInfoModalOpen && selectedNode && !selectedNode?.children && (
         <ModalInformation
           onClose={handleIsInfoModalClose}
-          node={selectedNode}
+          nodeName={selectedNode?.data?.name}
           modalData={modalData}
         />
       )}
+
+      <div className="hidden sm:block absolute bottom-0 left-0 mb-4 ml-4">
+        <Breadcrumb path={nodeAncestors} />
+      </div>
       <div className="hidden sm:block absolute bottom-0 right-0 mb-4 mr-4">
         <ZoomControl
           zoomPercentage={zoomPercentage}
