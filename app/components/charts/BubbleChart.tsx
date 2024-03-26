@@ -119,7 +119,7 @@ const BubbleChart: FC<BubbleChartProps> = ({
           setSelectedNode(null);
           focus !== d && (zoom(event, d), event.stopPropagation());
           d3.selectAll("circle")
-            .filter((dd: any) => dd.parent === d)
+            .filter((dd: any) => dd?.parent === d)
             .style("visibility", "visible");
         } else {
           setSelectedNode(d as any);
