@@ -13,6 +13,7 @@ import AIProductTable from "~/components/tables/AIProductTable";
 import { ZoomControl } from "~/components/zoom/ZoomControl";
 import { ModalContext } from "~/context/ModalContext";
 import { NotificationType } from "~/types";
+import { zoomFeatureFlag } from "~/utils/featureFlags";
 
 export const meta: MetaFunction = () => {
   return [
@@ -157,7 +158,7 @@ export default function Index() {
             <Breadcrumb path={nodeAncestors} />
           </div>
         )}
-        {currentView === ViewType.BubbleChart && (
+        {zoomFeatureFlag && currentView === ViewType.BubbleChart && (
           <div className="hidden sm:block absolute bottom-0 right-0 mb-4 mr-4 !z-40">
             <ZoomControl
               zoomPercentage={zoomPercentage}

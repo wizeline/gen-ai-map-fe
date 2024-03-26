@@ -17,3 +17,7 @@ body {
 .select-arrow-color .MuiSelect-icon {
   color: white !important;
 }
+
+.MuiTableCell-stickyHeader {
+  background-color: #203449 !important;
+}

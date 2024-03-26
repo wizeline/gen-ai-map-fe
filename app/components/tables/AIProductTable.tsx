@@ -160,7 +160,7 @@ const AIProductTable: FC<AIProductTableProps> = ({
       <div className="mt-6">
         <div className="w-[900px] h-[700px] border border-top-nav-border rounded overflow-auto !text-white mt-6 items-center">
           <TableContainer className="max-h-[700px]">
-            <Table>
+            <Table stickyHeader>
               <TableHead>
                 <TableRow className="bg-primary font-montserrat">
                   <TableCell className="!text-white-alt">Name</TableCell>
