@@ -99,7 +99,7 @@ export const TopNavigation: React.FC<Props> = ({
       )}
       {isShareModalOpen && shareContentUrl && (
         <ShareContent
-          url={shareContentUrl}
+          url={`${shareContentUrl}/gen-ai-map-fe/`}
           title={"Wizeline Gen AI Map"}
           onClose={handleShareCloseModal}
           className="fixed top-14 right-4 z-50"
