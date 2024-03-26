@@ -10,6 +10,7 @@ import {
   MenuItem,
   IconButton,
   SelectChangeEvent,
+  InputLabel,
 } from "@mui/material";
 import { Visibility } from "@mui/icons-material";
 import { AIProducts } from "~/types";
@@ -52,68 +53,145 @@ const AIProductTable: FC<AIProductTableProps> = ({ products }) => {
     });
   };
 
+  const categories = Array.from(
+    new Set(
+      products.reduce<string[]>(
+        (acc, product) => [...acc, ...product.category],
+        []
+      )
+    )
+  );
+  const ecosystems = Array.from(
+    new Set(products.map((product) => product.ecosystem))
+  );
+  const licenses = Array.from(
+    new Set(products.map((product) => product.licence))
+  );
+  const enterpriseCategories = Array.from(
+    new Set(
+      products.reduce<string[]>(
+        (acc, product) => [...acc, ...product.enterprise_categories],
+        []
+      )
+    )
+  );
+
   return (
-    <div className="mt-24">
-      <div className="inline flex gap-4">
+    <>
+      <div className="inline-flex items-center gap-4 flex-wrap mt-24">
+        <InputLabel id="category-label" className="!text-white">
+          Category
+        </InputLabel>
         <Select
-          className="border border-top-nav-border !text-white bg-primary"
-          name="licence"
-          value={filters.licence}
+          labelId="category-label"
+          className="focus:outline-none focus:ring-0 border border-top-nav-border !text-white bg-primary select-arrow-color h-9"
+          name="category"
+          value={filters.category}
           onChange={handleFilterChange}
         >
-          <MenuItem className="" value="All">
-            All
-          </MenuItem>
-          {/* Add other options here */}
+          <MenuItem value="All">All</MenuItem>
+          {categories.map((category) => (
+            <MenuItem key={category} value={category}>
+              {category}
+            </MenuItem>
+          ))}
         </Select>
+        <InputLabel id="ecosystem-label" className="!text-white">
+          AI Model
+        </InputLabel>
         <Select
-          className="border border-top-nav-border !text-white bg-primary"
+          labelId="ecosystem-label"
+          className="focus:outline-none focus:ring-0 border border-top-nav-border !text-white bg-primary select-arrow-color h-9"
           name="ecosystem"
           value={filters.ecosystem}
           onChange={handleFilterChange}
         >
-          <MenuItem className="" value="All">
-            All
-          </MenuItem>
-          {/* Add other options here */}
+          <MenuItem value="All">All</MenuItem>
+          {ecosystems.map((ecosystem) => (
+            <MenuItem key={ecosystem} value={ecosystem}>
+              {ecosystem}
+            </MenuItem>
+          ))}
         </Select>
-        {/* Add other filters here */}
+        <InputLabel id="license-label" className="!text-white">
+          License
+        </InputLabel>
+        <Select
+          labelId="license-label"
+          className="focus:outline-none focus:ring-0 border border-top-nav-border !text-white bg-primary select-arrow-color h-9"
+          name="licence"
+          value={filters.licence}
+          onChange={handleFilterChange}
+        >
+          <MenuItem value="All">All</MenuItem>
+          {licenses.map((license) => (
+            <MenuItem key={license} value={license}>
+              {license}
+            </MenuItem>
+          ))}
+        </Select>
+        <InputLabel id="enterprise_categories-label" className="!text-white">
+          Industry
+        </InputLabel>
+        <Select
+          labelId="enterprise_categories-label"
+          className="focus:outline-none focus:ring-0 border border-top-nav-border !text-white bg-primary select-arrow-color h-9"
+          name="enterprise_categories"
+          value={filters.enterprise_categories}
+          onChange={handleFilterChange}
+        >
+          <MenuItem value="All">All</MenuItem>
+          {enterpriseCategories.map((enterpriseCategory) => (
+            <MenuItem key={enterpriseCategory} value={enterpriseCategory}>
+              {enterpriseCategory}
+            </MenuItem>
+          ))}
+        </Select>
       </div>
-      <div className="w-[900px] h-[700px] border border-top-nav-border rounded overflow-auto !text-white mt-6">
-        <TableContainer className="max-h-[700px]">
-          <Table>
-            <TableHead>
-              <TableRow className="bg-primary font-montserrat">
-                <TableCell className="!text-white-alt">Name</TableCell>
-                <TableCell className="!text-white-alt">Ecosystem</TableCell>
-                <TableCell className="!text-white-alt">License</TableCell>
-                <TableCell className="!text-white-alt">Details</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filterProducts().map((product) => (
-                <TableRow key={product.id} className="bg-secondary font-nunito">
-                  <TableCell className="!text-white-alt">
-                    {product.name}
-                  </TableCell>
-                  <TableCell className="!text-white-alt">
-                    {product.ecosystem}
-                  </TableCell>
-                  <TableCell className="!text-white-alt">
-                    {product.licence}
-                  </TableCell>
-                  <TableCell>
-                    <IconButton className="!p-0">
-                      <Visibility className="!fill-white-alt" />
-                    </IconButton>
-                  </TableCell>
+      <div className="mt-6">
+        <div className="w-[900px] h-[700px] border border-top-nav-border rounded overflow-auto !text-white mt-6 items-center">
+          <TableContainer className="max-h-[700px]">
+            <Table>
+              <TableHead>
+                <TableRow className="bg-primary font-montserrat">
+                  <TableCell className="!text-white-alt">Category</TableCell>
+                  <TableCell className="!text-white-alt">Name</TableCell>
+                  <TableCell className="!text-white-alt">Ecosystem</TableCell>
+                  <TableCell className="!text-white-alt">License</TableCell>
+                  <TableCell className="!text-white-alt">Details</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {filterProducts().map((product) => (
+                  <TableRow
+                    key={product.id}
+                    className="bg-secondary font-nunito"
+                  >
+                    <TableCell className="!text-white-alt max-w-[350px]">
+                      {product.category.join(", ")}
+                    </TableCell>
+                    <TableCell className="!text-white-alt">
+                      {product.name}
+                    </TableCell>
+                    <TableCell className="!text-white-alt">
+                      {product.ecosystem}
+                    </TableCell>
+                    <TableCell className="!text-white-alt">
+                      {product.licence}
+                    </TableCell>
+                    <TableCell className="!text-center">
+                      <IconButton className="!p-0">
+                        <Visibility className="!fill-white-alt" />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
