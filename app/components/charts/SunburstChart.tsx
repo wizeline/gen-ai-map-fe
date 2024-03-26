@@ -3,8 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import { useScreenSize } from "~/context/ScreenSizeContext";
-import ModalInformation from "../information/ModalInformation";
-import { NodeType } from "~/types";
 import { hierarchy } from "d3";
 
 export type SunburstLeaf = {
@@ -22,28 +20,18 @@ export type SunburstNode = {
 
 interface SunburstElementProps {
   data: SunburstNode | undefined;
+  onSelectNodePath?: (args: any) => void;
   onSelectNode?: (args: any) => void;
 }
 
 const SunburstChart = (props: SunburstElementProps) => {
-  const { data, onSelectNode } = props;
+  const { data, onSelectNodePath, onSelectNode } = props;
   const color = d3.scaleOrdinal(d3.schemeSet1);
   const chartRef = useRef<HTMLDivElement | null>(null);
   const [Sunburst, setSunburst] = useState<any | null>(null);
-  const [selectedNode, setSelectedNode] = useState<NodeType | null>(null);
   const [hasChildNodes, setHasChildNodes] = useState(false);
-  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const { isDesktop, isTablet } = useScreenSize();
   const chartWidth = isDesktop ? 800 : isTablet ? 600 : 300;
-
-  const handleIsInfoModalOpen = () => {
-    setIsInfoModalOpen(true);
-  };
-
-  const handleIsInfoModalClose = () => {
-    setSelectedNode(null);
-    setIsInfoModalOpen(false);
-  };
 
   useEffect(() => {
     if (chartRef.current) {
@@ -96,16 +84,13 @@ const SunburstChart = (props: SunburstElementProps) => {
                 }
               });
 
-            onSelectNode && onSelectNode(lastPath.split("/"));
+            onSelectNodePath && onSelectNodePath(lastPath.split("/"));
 
             if (!node.children) {
-              setSelectedNode(node);
+              onSelectNode && onSelectNode(node?.name);
             } else {
-              setSelectedNode(null);
+              onSelectNode && onSelectNode("");
             }
-          }
-          if (!isInfoModalOpen) {
-            handleIsInfoModalOpen();
           }
         })
         .width(chartWidth)
@@ -120,22 +105,11 @@ const SunburstChart = (props: SunburstElementProps) => {
     color,
     hasChildNodes,
     chartWidth,
-    isInfoModalOpen,
     onSelectNode,
+    onSelectNodePath,
   ]);
 
-  return (
-    <>
-      <div ref={chartRef} className="max-w-[800px] z-0"></div>
-      {isInfoModalOpen && selectedNode && !selectedNode?.children && (
-        <ModalInformation
-          onClose={handleIsInfoModalClose}
-          nodeName={selectedNode?.name}
-          modalData={[]}
-        />
-      )}
-    </>
-  );
+  return <div ref={chartRef} className="max-w-[800px] z-0"></div>;
 };
 
 export default SunburstChart;

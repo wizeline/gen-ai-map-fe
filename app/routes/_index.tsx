@@ -122,6 +122,12 @@ export default function Index() {
               }`}
             >
               <div className="min-h-screen flex flex-col justify-between items-center">
+                {/* Use this if you want to display the Sunburst chart instead of the Bubble chart */}
+                {/*<SunburstChart
+                  data={jsonData}
+                  onSelectNode={setProductName}
+                  onSelectNodePath={setNodeAncestors}
+                />*/}
                 <BubbleChart
                   data={jsonData}
                   onSelectNode={setProductName}
